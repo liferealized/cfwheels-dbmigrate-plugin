@@ -8,6 +8,7 @@
 	<cfset variables.sqlTypes['decimal'] = {name='DECIMAL'}>
 	<cfset variables.sqlTypes['float'] = {name='FLOAT'}>
 	<cfset variables.sqlTypes['integer'] = {name='INTEGER'}>
+	<cfset variables.sqlTypes['bigInteger'] = {name='BIGINT'}>
 	<cfset variables.sqlTypes['string'] = {name='CHARACTER VARYING',limit=255}>
 	<cfset variables.sqlTypes['text'] = {name='TEXT'}>
 	<cfset variables.sqlTypes['time'] = {name='TIME'}>
@@ -23,10 +24,16 @@
 		<cfscript>
 		if (StructKeyExists(arguments.options, "autoIncrement") && arguments.options.autoIncrement)
 			arguments.sql = ReplaceNoCase(arguments.sql, "INTEGER", "SERIAL", "all");
-		
+
 		arguments.sql = arguments.sql & " PRIMARY KEY";
 		</cfscript>
 		<cfreturn arguments.sql>
+	</cffunction>
+
+	<!--- postgres does not quote table names --->
+	<cffunction name="quoteTableName" returntype="string" access="public" hint="surrounds table or index names with quotes">
+		<cfargument name="name" type="string" required="true" hint="column name">
+		<cfreturn "#Replace(arguments.name,".","`.`","ALL")#">
 	</cffunction>
 
 	<!--- postgres uses double quotes --->
@@ -36,7 +43,7 @@
 	</cffunction>
 
 	<!--- createTable - use default --->
-	
+
 	<cffunction name="renameTable" returntype="string" access="public" hint="generates sql to rename a table">
 		<cfargument name="oldName" type="string" required="true" hint="old table name">
 		<cfargument name="newName" type="string" required="true" hint="new table name">
@@ -44,29 +51,29 @@
 	</cffunction>
 
 	<!--- dropTable - use default --->
-	
-	<!--- NOTE FOR addColumnToTable & changeColumnInTable 
+
+	<!--- NOTE FOR addColumnToTable & changeColumnInTable
 		  Rails adaptor appears to be applying default/nulls in separate queries
 		  Need to check if that is necessary --->
 	<!--- addColumnToTable - ? --->
 	<!--- changeColumnInTable - ? --->
-	
+
 	<!--- renameColumnInTable - use default --->
-	
+
 	<!--- dropColumnFromTable - use default --->
-	
+
 	<!--- addForeignKeyToTable - use default --->
-	
+
 	<cffunction name="dropForeignKeyFromTable" returntype="string" access="public" hint="generates sql to add a foreign key constraint to a table">
 		<cfargument name="name" type="string" required="true" hint="table name">
 		<cfargument name="keyName" type="any" required="true" hint="foreign key name">
 		<cfreturn "ALTER TABLE #quoteTableName(LCase(arguments.name))# DROP CONSTRAINT #quoteTableName(arguments.keyname)#">
 	</cffunction>
-	
+
 	<!--- foreignKeySQL - use default --->
-	
+
 	<!--- addIndex - use default --->
-	
+
 	<!--- removeIndex - use default --->
 
 </cfcomponent>
