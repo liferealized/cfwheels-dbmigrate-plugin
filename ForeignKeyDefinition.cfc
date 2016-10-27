@@ -1,5 +1,5 @@
 <cfcomponent extends="Base">
-	
+
 	<cffunction name="init" returntype="ForeignKeyDefinition" access="public">
 		<cfargument name="adapter" type="any" required="yes" hint="database adapter">
 		<cfargument name="table" type="string" required="yes" hint="table name">
@@ -23,7 +23,7 @@
 		</cfscript>
 		<cfreturn this>
 	</cffunction>
-	
+
 	<cffunction name="toSQL" returntype="string" access="public">
 		loc.args = "adapter,table,referenceTable,column,referenceColumn,onUpdate,onDelete";
 	</cffunction>
@@ -35,13 +35,13 @@
 			</cfscript>
 			<cfreturn sql>
 	    </cffunction>
-	    
+
 	   <cffunction name="addForeignKeyOptions" returntype="string" access="public">
 			<cfargument name="sql" type="string" required="yes" hint="column definition sql">
 			<cfscript>
 			var loc = {};
 			loc.options = {};
-			loc.optionalArguments = "referenceTable,referenceColumn,column";
+			loc.optionalArguments = "referenceTable,referenceColumn,column,onUpdate,onDelete";
 			loc.iEnd = ListLen(loc.optionalArguments);
 			for (loc.i=1; loc.i <= loc.iEnd; loc.i++) {
 				loc.argumentName = ListGetAt(loc.optionalArguments,loc.i);

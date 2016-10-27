@@ -30,6 +30,26 @@
 					arguments.sql = arguments.sql & " (" & arguments.options.referenceColumn & ")";
 				}
 			}
+			for (loc.item in listToArray("onUpdate,onDelete"))
+				{
+					if (len(arguments.options[loc.item]))
+					{
+						switch (arguments.options[loc.item])
+						{
+							case "none":
+								arguments.sql = arguments.sql & " " & uCase(humanize(loc.item)) & " NO ACTION";
+								break;
+
+							case "null":
+								arguments.sql = arguments.sql & " " & uCase(humanize(loc.item)) & " SET NULL";
+								break;
+
+							default:
+								arguments.sql = arguments.sql & " " & uCase(humanize(loc.item)) & " CASCADE";
+								break;
+						}
+					}
+				}
 
 		</cfscript>
 		<cfreturn arguments.sql>

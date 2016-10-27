@@ -42,23 +42,23 @@
 	<cffunction name="addPrimaryKeyOptions" returntype="string" access="public">
 		<cfthrow message="The `addPrimaryKeyOptions` must be implented in the storage specific adapter." />
 	</cffunction>
-    
+
     <cffunction name="primaryKeyConstraint" returntype="string" access="public">
     	<cfargument name="name" type="string" required="true">
         <cfargument name="primaryKeys" type="array" required="true">
         <cfscript>
         var loc = {};
-		
+
 		loc.sql = "PRIMARY KEY (";
-		
+
 		for (loc.i = 1; loc.i lte ArrayLen(arguments.primaryKeys); loc.i++)
 		{
-			if (loc.i != 1) 
-				loc.sql = loc.sql & ", "; 
+			if (loc.i != 1)
+				loc.sql = loc.sql & ", ";
 			loc.sql = loc.sql & arguments.primaryKeys[loc.i].toColumnNameSQL();
 		}
-		
-		loc.sql = loc.sql & ")"; 
+
+		loc.sql = loc.sql & ")";
         </cfscript>
         <cfreturn loc.sql />
     </cffunction>
@@ -90,7 +90,7 @@
 		</cfif>
 		<cfreturn arguments.sql>
 	</cffunction>
-	
+
 	<cffunction name="optionsIncludeDefault" returntype="boolean">
 		<cfargument name="type" type="string" required="false" hint="column type">
 		<cfargument name="default" type="string" required="false" default="" hint="default value">
@@ -124,7 +124,7 @@
 		<cfargument name="name" type="string" required="true" hint="column name">
 		<cfreturn "'#arguments.name#'">
 	</cffunction>
-	
+
 	<cffunction name="createTable" returntype="string" access="public" hint="generates sql to create a table">
 		<cfargument name="name" type="string" required="true" hint="table name">
 		<cfargument name="columns" type="array" required="true" hint="array of column definitions">
@@ -133,9 +133,9 @@
 		<cfscript>
 		var loc = {};
 		loc.sql = "CREATE TABLE #quoteTableName(LCase(arguments.name))# (#chr(13)##chr(10)#";
-		
+
 		loc.iEnd = ArrayLen(arguments.primaryKeys);
-		
+
 		if (loc.iEnd == 1)
 		{
 			// if we have a single primary key, define the column with the primaryKey adapter method
@@ -150,18 +150,18 @@
 					loc.sql = loc.sql & ",#chr(13)##chr(10)#";
 			}
 		}
-		
+
 		// define the columns in the sql
 		loc.iEnd = ArrayLen(arguments.columns);
 		for (loc.i=1; loc.i <= loc.iEnd; loc.i++) {
 			loc.sql = loc.sql & " " & arguments.columns[loc.i].toSQL();
 			if(loc.i != loc.iEnd) { loc.sql = loc.sql & ",#chr(13)##chr(10)#"; }
 		}
-		
+
 		// if we have multiple primarykeys the adapater might need to add a constraint here
 		if (ArrayLen(arguments.primaryKeys) > 1)
 			loc.sql = loc.sql & ",#chr(13)##chr(10)# " & primaryKeyConstraint(argumentCollection=arguments);
-		
+
 		// define the foreign keys
 		loc.iEnd = ArrayLen(arguments.foreignKeys);
 		for (loc.i=1; loc.i <= loc.iEnd; loc.i++) {
@@ -171,13 +171,13 @@
 		</cfscript>
 		<cfreturn loc.sql>
 	</cffunction>
-	
+
 	<cffunction name="renameTable" returntype="string" access="public" hint="generates sql to rename a table">
 		<cfargument name="oldName" type="string" required="true" hint="old table name">
 		<cfargument name="newName" type="string" required="true" hint="new table name">
 		<cfreturn "ALTER TABLE #quoteTableName(arguments.oldName)# RENAME #quoteTableName(arguments.newName)#">
 	</cffunction>
-	
+
 	<cffunction name="dropTable" returntype="string" access="public" hint="generates sql to drop a table">
 		<cfargument name="name" type="string" required="true" hint="table name">
 		<cfreturn "DROP TABLE IF EXISTS #quoteTableName(LCase(arguments.name))#">
@@ -188,20 +188,20 @@
 		<cfargument name="column" type="any" required="true" hint="column definition object">
 		<cfreturn "ALTER TABLE #quoteTableName(LCase(arguments.name))# ADD COLUMN #arguments.column.toSQL()#" />
 	</cffunction>
-	
+
 	<cffunction name="changeColumnInTable" returntype="string" access="public" hint="generates sql to change an existing column in a table">
 		<cfargument name="name" type="string" required="true" hint="table name">
 		<cfargument name="column" type="any" required="true" hint="column definition object">
 		<cfreturn "ALTER TABLE #quoteTableName(LCase(arguments.name))# CHANGE #quoteColumnName(arguments.column.name)# #arguments.column.toSQL()#">
 	</cffunction>
-	
+
 	<cffunction name="renameColumnInTable" returntype="string" access="public" hint="generates sql to rename an existing column in a table">
 		<cfargument name="name" type="string" required="true" hint="table name">
 		<cfargument name="columnName" type="string" required="true" hint="old column name">
 		<cfargument name="newColumnName" type="string" required="true" hint="new column name">
 		<cfreturn "ALTER TABLE #quoteTableName(LCase(arguments.name))# RENAME COLUMN #quoteColumnName(arguments.columnName)# TO #quoteColumnName(arguments.newColumnName)#">
 	</cffunction>
-	
+
 	<cffunction name="dropColumnFromTable" returntype="string" access="public" hint="generates sql to add a foreign key constraint to a table">
 		<cfargument name="name" type="string" required="true" hint="table name">
 		<cfargument name="columnName" type="any" required="true" hint="column name">
@@ -213,7 +213,7 @@
 		<cfargument name="foreignKey" type="any" required="true" hint="foreign key definition object">
 		<cfreturn "ALTER TABLE #quoteTableName(LCase(arguments.name))# ADD #arguments.foreignKey.toSQL()#">
 	</cffunction>
-	
+
 	<cffunction name="dropForeignKeyFromTable" returntype="string" access="public" hint="generates sql to add a foreign key constraint to a table">
 		<cfargument name="name" type="string" required="true" hint="table name">
 		<cfargument name="keyName" type="any" required="true" hint="foreign key name">
@@ -254,7 +254,7 @@
 		</cfscript>
 		<cfreturn loc.sql>
 	</cffunction>
-	
+
 	<cffunction name="addIndex" returntype="string" access="public" hint="generates sql to add database index on a table column">
 		<cfargument name="table" type="string" required="true" hint="table name">
 		<cfargument name="columnNames" type="string" required="true" hint="column names to index">
@@ -264,7 +264,7 @@
 		var sql = "CREATE ";
 		if(arguments.unique) { sql = sql & "UNIQUE "; }
 		sql = sql & "INDEX #quoteTableName(arguments.indexName)# ON #quoteTableName(arguments.table)#(";
-		
+
 		loc.iEnd = ListLen(arguments.columnNames);
 		for (loc.i=1; loc.i <= loc.iEnd; loc.i++) {
 			sql = sql & quoteColumnName(ListGetAt(arguments.columnNames,loc.i));
@@ -274,7 +274,7 @@
 		</cfscript>
 		<cfreturn sql>
 	</cffunction>
-	
+
 	<cffunction name="removeIndex" returntype="string" access="public" hint="generates sql to remove a database index">
 		<cfargument name="table" type="string" required="true" hint="table name">
 		<cfargument name="indexName" type="string" required="false" default="" hint="index name">
