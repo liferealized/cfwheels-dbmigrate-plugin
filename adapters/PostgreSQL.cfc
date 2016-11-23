@@ -3,6 +3,7 @@
 	<cfset variables.sqlTypes = {}>
 	<cfset variables.sqlTypes['binary'] = {name='BYTEA'}>
 	<cfset variables.sqlTypes['boolean'] = {name='BOOLEAN'}>
+	<cfset variables.sqlTypes['char'] = {name='CHARACTER',limit=64}>
 	<cfset variables.sqlTypes['date'] = {name='DATE'}>
 	<cfset variables.sqlTypes['datetime'] = {name='TIMESTAMP'}>
 	<cfset variables.sqlTypes['decimal'] = {name='DECIMAL'}>

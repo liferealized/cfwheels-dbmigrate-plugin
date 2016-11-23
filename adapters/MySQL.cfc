@@ -27,10 +27,10 @@
 			arguments.sql = arguments.sql & " NULL";
 		else
 			arguments.sql = arguments.sql & " NOT NULL";
-		
+
 		if (StructKeyExists(arguments.options, "autoIncrement") && arguments.options.autoIncrement)
 			arguments.sql = arguments.sql & " AUTO_INCREMENT";
-		
+
 		arguments.sql = arguments.sql & " PRIMARY KEY";
 		</cfscript>
 		<cfreturn arguments.sql>
@@ -46,7 +46,7 @@
 		<cfargument name="name" type="string" required="true" hint="column name">
 		<cfreturn "`#arguments.name#`">
 	</cffunction>
-	
+
 	<!--- MySQL text fields can't have default --->
 	<cffunction name="optionsIncludeDefault" returntype="boolean">
 		<cfargument name="type" type="string" required="false" hint="column type">
@@ -58,7 +58,7 @@
 			<cfreturn true>
 		</cfif>
 	</cffunction>
-	
+
 	<!--- MySQL can't use rename column, need to recreate column definition and use change instead --->
 	<cffunction name="renameColumnInTable" returntype="string" access="public" hint="generates sql to rename an existing column in a table">
 		<cfargument name="name" type="string" required="true" hint="table name">
@@ -73,5 +73,5 @@
 		<cfargument name="indexName" type="string" required="false" default="" hint="index name">
 		<cfreturn "DROP INDEX #quoteTableName(arguments.indexName)# ON #quoteTableName(arguments.table)#">
 	</cffunction>
-	
+
 </cfcomponent>
