@@ -147,15 +147,14 @@
 		<cfargument name="fileName" type="string" required="true">
 		<cfargument name="method" type="string" required="true">
 		<cfscript>
-			var returnValue = "";
-			var loc = {};
-			loc.returnVariable = "returnValue";
-			loc.method = arguments.method;
-			loc.component = ListChangeDelims(arguments.path, ".", "/") & "." & ListChangeDelims(arguments.fileName, ".", "/");
-			loc.argumentCollection = arguments;
+			var rv = "";
+			local.returnVariable = "rv";
+			local.method = arguments.method;
+			local.component = ListChangeDelims(arguments.path, ".", "/") & "." & ListChangeDelims(arguments.fileName, ".", "/");
+			local.argumentCollection = arguments;
+			include "../../root.cfm";
+			return rv;
 		</cfscript>
-		<cfinclude template="../../root.cfm">
-		<cfreturn returnValue>
 	</cffunction>
 
 	<cffunction name="$copyTemplateMigrationAndRename" displayname="$copyTemplateMigrationAndRename" access="private" returntype="string">

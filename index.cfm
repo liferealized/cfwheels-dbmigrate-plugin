@@ -147,7 +147,7 @@
 								</option>
 							</cfif>
 							<cfloop array="#migrations#" index="migration">
-								<option value="#migration.version#">#migration.version# - #migration.name# 
+								<option value="#migration.version#">#migration.version# - #migration.name#
 									<cfif migration.status eq "migrated">
 										(migrated)
 									<cfelse>
@@ -155,7 +155,7 @@
 									</cfif>
 								</option>
 							</cfloop>
-						</select>						
+						</select>
 					</div>
 					<div class="two columns">
 						<br>
@@ -190,7 +190,7 @@
 					</td>
 				</tr>
 			</cfloop>
-		</table>	
+		</table>
 	</div>
 </cfif>
 
