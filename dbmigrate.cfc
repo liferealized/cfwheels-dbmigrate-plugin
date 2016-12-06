@@ -1,10 +1,10 @@
 <cfcomponent output="false" mixin="none" environment="design,development,maintenance">
-	
+
 	<cffunction name="init">
-		<cfset this.version = "1.0,1.0.1,1.0.2,1.0.3,1.0.4,1.0.5,1.1,1.1.3,1.1.4,1.1.5,1.1.6,1.1.7,1.1.8,1.3.3,1.3.4,1.4.5">
+		<cfset this.version = "1.0,1.0.1,1.0.2,1.0.3,1.0.4,1.0.5,1.1,1.1.3,1.1.4,1.1.5,1.1.6,1.1.7,1.1.8,1.3.3,1.3.4,1.4.5,2.0">
 		<cfreturn this>
 	</cffunction>
-	
+
 	<cffunction name="migrateTo" access="public" returntype="string" hint="migrates database to a specified version">
 		<cfargument name="version" type="string" required="false" default="">
 		<cfset var loc = {}>
@@ -36,7 +36,7 @@
   							<cfset $removeVersionAsMigrated(loc.migration.version)>
   							<cfcatch type="any">
   								<cfset loc.feedback = loc.feedback & "Error migrating to #loc.migration.version#.#chr(13)##CFCATCH.Message##chr(13)##CFCATCH.Detail##chr(13)#">
-                  				<cftransaction action="rollback" /> 
+                  				<cftransaction action="rollback" />
   								<cfbreak>
   							</cfcatch>
   						</cftry>
@@ -65,22 +65,22 @@
 	  							</cfcatch>
 	  						</cftry>
 	              			<cftransaction action="commit" />
-	            		</cftransaction> 
+	            		</cftransaction>
 					<cfelseif loc.migration.version gt arguments.version>
-						<cfbreak>			
+						<cfbreak>
 					</cfif>
 				</cfloop>
 			</cfif>
 		</cfif>
 		<cfreturn loc.feedback>
 	</cffunction>
-	
+
 	<cffunction name="getCurrentMigrationVersion" access="public" returntype="string" hint="returns current database version">
 		<cfset var loc = {}>
 		<cfset loc.listPreviouslyMigratedVersions = $getVersionsPreviouslyMigrated()>
 		<cfreturn ListLast(loc.listPreviouslyMigratedVersions)>
 	</cffunction>
-	
+
 	<cffunction name="getAvailableMigrations" access="public" returntype="array" hint="searches db/migrate folder for migrations">
 		<cfset var loc = {}>
 		<cfset loc.listVersionsPreviouslyMigrated = $getVersionsPreviouslyMigrated()>
@@ -116,7 +116,7 @@
 		</cfloop>
 		<cfreturn loc.migrations>
 	</cffunction>
-	
+
 	<cffunction name="createMigration" access="public" returntype="string">
 		<cfargument name="migrationName" type="string" required="true" />
 		<cfargument name="templateName" type="string" required="false" default="blank" />
@@ -127,21 +127,21 @@
 			<cfreturn "You must supply a migration name (e.g. 'creates member table')">
 		</cfif>
 	</cffunction>
-	
+
 	<cffunction name="$setVersionAsMigrated" access="private">
 		<cfargument name="version" required="true" type="string">
 		<cfquery datasource="#application.wheels.dataSourceName#">
 		INSERT INTO schemainfo (version) VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.version#">)
 		</cfquery>
 	</cffunction>
-	
+
 	<cffunction name="$removeVersionAsMigrated" access="private">
 		<cfargument name="version" required="true" type="string">
 		<cfquery datasource="#application.wheels.dataSourceName#" >
 		DELETE FROM schemainfo WHERE version = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.version#">
 		</cfquery>
-	</cffunction>	
-	
+	</cffunction>
+
 	<cffunction name="$createObjectFromRoot" returntype="any" access="public" output="false">
 		<cfargument name="path" type="string" required="true">
 		<cfargument name="fileName" type="string" required="true">
@@ -178,16 +178,16 @@
 			<cfif Len(Trim(application.wheels.rootcomponentpath)) GT 0>
 			  <cfset loc.extendsPath = application.wheels.rootcomponentpath & ".plugins.dbmigrate.Migration"/>
 			</cfif>
-			
+
 			<cfset loc.templateContent = replace(loc.templateContent, "[extends]", loc.extendsPath)>
 			<cfset loc.templateContent = replace(loc.templateContent, "[description]", replace(arguments.migrationName,'"','&quot;','ALL'))>
-			
+
 			<cfset loc.migrationFile = REREplace(arguments.migrationName,"[^A-z0-9]+"," ","ALL")>
 			<cfset loc.migrationFile = REREplace(Trim(loc.migrationFile),"[\s]+","_","ALL")>
 			<cfset loc.migrationFile = $getNextMigrationNumber(arguments.migrationPrefix) & "_#loc.migrationFile#.cfc">
-			
+
 			<cffile action="write" file="#loc.migrationsPath#/#loc.migrationFile#" output="#loc.templateContent#">
-			
+
 			<cfcatch type="any">
 				<cfreturn "There was an error when creating the migration: #cfcatch.message#">
 			</cfcatch>
@@ -218,7 +218,7 @@
 		</cfscript>
 		<cfreturn loc.migrationNumber>
 	</cffunction>
-	
+
 	<cffunction name="$getVersionsPreviouslyMigrated" access="private" returntype="string">
 		<cfset var loc = {}>
 		<cftry>
