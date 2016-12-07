@@ -9,6 +9,7 @@
 	<cfset variables.sqlTypes['decimal'] = {name='DECIMAL'}>
 	<cfset variables.sqlTypes['float'] = {name='FLOAT'}>
 	<cfset variables.sqlTypes['integer'] = {name='INTEGER'}>
+	<cfset variables.sqlTypes['ipaddress'] = {name='INET'}>
 	<cfset variables.sqlTypes['bigInteger'] = {name='BIGINT'}>
 	<cfset variables.sqlTypes['string'] = {name='CHARACTER VARYING',limit=255}>
 	<cfset variables.sqlTypes['text'] = {name='TEXT'}>

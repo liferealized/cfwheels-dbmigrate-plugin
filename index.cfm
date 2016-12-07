@@ -48,7 +48,7 @@
 	<div class="row">
 		<fieldset>
 			<legend>Migration result</legend>
-			<pre>#flash("dbmigrateFeedback")#</pre>
+			<pre style="display: block; padding: 10px; overflow: scroll; width: 920px;">#flash("dbmigrateFeedback")#</pre>
 		</fieldset>
 	</div>
 </cfif>
@@ -75,7 +75,7 @@
 </cfif>
 
 <div class="row">
-	<form action="#CGI.script_name & '?' & CGI.query_string#" method="post">
+	<form action="#CGI.script_name & '?' & CGI.query_string#" method="post" class="twelve">
 		<fieldset>
 			<legend>Create new migration file from template</legend>
 			<cfif ArrayLen(migrations) eq 0>
@@ -129,11 +129,11 @@
 
 <cfif ArrayLen(migrations) gt 0>
 	<div class="row">
-		<form action="#CGI.script_name & '?' & CGI.query_string#&requesttimeout=99999" method="post">
-			<fieldset>
+		<form action="#CGI.script_name & '?' & CGI.query_string#&requesttimeout=99999" method="post" class="twelve">
+			<fieldset style="display: block;">
 				<legend>Migrate</legend>
 				<div class="row">
-					<div class="ten columns">
+					<div class="twelve columns">
 						<label for="version">Migrate to version:</label>
 						<select name="version" >
 							<cfif lastVersion neq 0>
@@ -167,7 +167,11 @@
 	</div>
 
 	<div class="row">
-		<label>Available Migrations:</label>
+		<div class="twelve">
+			<label>Available Migrations:</label>
+		</div>
+	</div>
+	<div class="row">
 		<table class="twelve">
 			<tr>
 				<th>Version</th>

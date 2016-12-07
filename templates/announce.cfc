@@ -1,12 +1,10 @@
-<cfcomponent extends="[extends]" hint="[description]">
-  <cffunction name="up">
-    <cfscript>
-      announce('');
-    </cfscript>
-  </cffunction>
-  <cffunction name="down">
-    <cfscript>
-      announce('');
-    </cfscript>
-  </cffunction>
-</cfcomponent>
+component extends="[extends]" hint="[description]" {
+
+  public void function up() {
+    announce('');
+  }
+
+  public void function down() {
+    announce('');
+  }
+}
