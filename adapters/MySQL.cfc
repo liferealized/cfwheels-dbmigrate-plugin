@@ -4,6 +4,7 @@
 	<cfset variables.sqlTypes['biginteger'] = {name='BIGINT UNSIGNED'}>
 	<cfset variables.sqlTypes['binary'] = {name='BLOB'}>
 	<cfset variables.sqlTypes['boolean'] = {name='TINYINT',limit=1}>
+	<cfset variables.sqlTypes['char'] = {name='CHAR',limit=64}>
 	<cfset variables.sqlTypes['date'] = {name='DATE'}>
 	<cfset variables.sqlTypes['datetime'] = {name='DATETIME'}>
 	<cfset variables.sqlTypes['decimal'] = {name='DECIMAL'}>
@@ -17,6 +18,42 @@
 
 	<cffunction name="adapterName" returntype="string" access="public" hint="name of database adapter">
 		<cfreturn "MySQL">
+	</cffunction>
+
+	<cffunction name="addForeignKeyOptions" returntype="string" access="public">
+		<cfargument name="sql" type="string" required="true" hint="column definition sql">
+		<cfargument name="options" type="struct" required="false" default="#StructNew()#" hint="column options">
+		<cfscript>
+			arguments.sql = arguments.sql & " FOREIGN KEY (" & arguments.options.column & ")";
+			if (StructKeyExists(arguments.options, "referenceTable")){
+				if (StructKeyExists(arguments.options, "referenceColumn")){
+					arguments.sql = arguments.sql & " REFERENCES ";
+					arguments.sql = arguments.sql & arguments.options.referenceTable;
+					arguments.sql = arguments.sql & " (" & arguments.options.referenceColumn & ")";
+				}
+			}
+			for (loc.item in listToArray("onUpdate,onDelete"))
+				{
+					if (len(arguments.options[loc.item]))
+					{
+						switch (arguments.options[loc.item])
+						{
+							case "none":
+								arguments.sql = arguments.sql & " " & uCase(humanize(loc.item)) & " NO ACTION";
+								break;
+
+							case "null":
+								arguments.sql = arguments.sql & " " & uCase(humanize(loc.item)) & " SET NULL";
+								break;
+
+							default:
+								arguments.sql = arguments.sql & " " & uCase(humanize(loc.item)) & " CASCADE";
+								break;
+						}
+					}
+				}
+		</cfscript>
+		<cfreturn arguments.sql>
 	</cffunction>
 
 	<cffunction name="addPrimaryKeyOptions" returntype="string" access="public">
